@@ -12,7 +12,7 @@ const ingredientReducer = (currentIngredients, action) => {
     case 'ADD':
       return [...currentIngredients, action.ingredient];
     case 'DELETE':
-      return currentIngredients.filter(ing => ing.id !== action.id);
+      return currentIngredients.filter((ing) => ing.id !== action.id);
     default:
       throw new Error('Should not get there!');
   }
@@ -28,50 +28,53 @@ const Ingredients = () => {
     console.log('RENDERING INGREDIENTS', userIngredients);
   }, [userIngredients]);
 
-  const filteredIngredientsHandler = useCallback(filteredIngredients => {
+  const filteredIngredientsHandler = useCallback((filteredIngredients) => {
     // setUserIngredients(filteredIngredients);
     dispatch({ type: 'SET', ingredients: filteredIngredients });
   }, []);
 
-  const addIngredientHandler = ingredient => {
+  const addIngredientHandler = (ingredient) => {
     setIsLoading(true);
-    fetch('https://react-hooks-update.firebaseio.com/ingredients.json', {
-      method: 'POST',
-      body: JSON.stringify(ingredient),
-      headers: { 'Content-Type': 'application/json' }
-    })
-      .then(response => {
+    fetch(
+      'https://react-hooks-update-e8923-default-rtdb.firebaseio.com/ingredients.json',
+      {
+        method: 'POST',
+        body: JSON.stringify(ingredient),
+        headers: { 'Content-Type': 'application/json' },
+      }
+    )
+      .then((response) => {
         setIsLoading(false);
         return response.json();
       })
-      .then(responseData => {
+      .then((responseData) => {
         // setUserIngredients(prevIngredients => [
         //   ...prevIngredients,
         //   { id: responseData.name, ...ingredient }
         // ]);
         dispatch({
           type: 'ADD',
-          ingredient: { id: responseData.name, ...ingredient }
+          ingredient: { id: responseData.name, ...ingredient },
         });
       });
   };
 
-  const removeIngredientHandler = ingredientId => {
+  const removeIngredientHandler = (ingredientId) => {
     setIsLoading(true);
     fetch(
-      `https://react-hooks-update.firebaseio.com/ingredients/${ingredientId}.json`,
+      `https://react-hooks-update-e8923-default-rtdb.firebaseio.com/ingredients/${ingredientId}.json`,
       {
-        method: 'DELETE'
+        method: 'DELETE',
       }
     )
-      .then(response => {
+      .then((response) => {
         setIsLoading(false);
         // setUserIngredients(prevIngredients =>
         //   prevIngredients.filter(ingredient => ingredient.id !== ingredientId)
         // );
         dispatch({ type: 'DELETE', id: ingredientId });
       })
-      .catch(error => {
+      .catch((error) => {
         setError('Something went wrong!');
         setIsLoading(false);
       });
@@ -82,7 +85,7 @@ const Ingredients = () => {
   };
 
   return (
-    <div className="App">
+    <div className='App'>
       {error && <ErrorModal onClose={clearError}>{error}</ErrorModal>}
 
       <IngredientForm
